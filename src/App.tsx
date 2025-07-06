@@ -25,9 +25,9 @@ function App() {
       </div>
 
       {/* Optional cursor */}
-      {/* <SplashCursor /> */}
+      <SplashCursor />
 
-      <Crosshair containerRef={containerRef} color="#fff" />
+      {/* <Crosshair containerRef={containerRef} color="#fff" /> */}
     </div>
   );
 }
