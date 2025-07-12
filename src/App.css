@@ -10,7 +10,12 @@ body {
   color: white;
   overflow-x: hidden;
   line-height: 1.6;
-  cursor: none;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  /* Disable pointer events for SplashCursor on mobile to allow scrolling */
+  .splash-cursor {
+    pointer-events: none !important;
+  }
 }
 
 .App {
@@ -514,6 +519,19 @@ body {
 
 /* Mobile Optimizations */
 @media (max-width: 768px) {
+  /* Smooth scrolling for mobile */
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+  
+  body {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    cursor: auto;
+  }
+  
   /* Remove particles and code bits on mobile for performance */
   .particle {
     display: none;
@@ -533,9 +551,17 @@ body {
     transform: translateY(-8px) scale(1.02);
   }
   
-  /* Enable cursor on mobile */
-  body {
-    cursor: auto;
+  /* Ensure scrolling works properly on mobile */
+  * {
+    /* touch-action: pan-y; */
+  }
+  
+  /* Allow scrolling on interactive elements and show pointer cursor on buttons/links */
+  button, a, input, textarea, select {
+    touch-action: manipulation;
+  }
+  button, a {
+    cursor: pointer !important;
   }
   
   /* Mobile-specific spacing adjustments */
@@ -592,6 +618,9 @@ body {
   /* Mobile navigation adjustments */
   nav {
     padding: 0.5rem 1rem !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
   }
   
   /* Mobile form adjustments */

@@ -1,48 +1,53 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, MessageCircle, Calendar, Clock } from 'lucide-react';
+import toast from 'react-hot-toast';
+import emailjs from 'emailjs-com';
 import CodeBits from './CodeBits';
+import BookingModal from './BookingModal';
 
 const Contact: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
-
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    console.log('Form submitted:', formData);
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: '',
-    });
-    setIsSubmitting(false);
+
+    try {
+      const serviceId = 'YOUR_SERVICE_ID';
+      const templateId = 'YOUR_TEMPLATE_ID';
+      const publicKey = 'YOUR_PUBLIC_KEY';
+
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        reply_to: formData.email,
+      };
+
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+
+      toast.success("✅ Message sent! I'll be in touch soon.");
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (err) {
+      console.error(err);
+      toast.error('❌ Submission failed. Please try again or email me directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const contactInfo = [
+    const contactInfo = [
     {
       icon: Mail,
       title: 'Email',
-      value: 'beemaalogesh@gmail.com',
-      href: 'mailto:beemaalogesh@gmail.com',
+      value: 'asd.com',
+      href: 'mailto:asd.com?subject=Let\'s Work Together&body=Hi Logesh, I\'d like to discuss a project with you.',
       description: 'Send me an email anytime',
     },
     {
@@ -55,7 +60,7 @@ const Contact: React.FC = () => {
     {
       icon: MapPin,
       title: 'Location',
-      value: 'The Nilgiris, INDIA',
+      value: 'The Nilgiris, TamilNadu, India',
       href: '#',
       description: 'Available for local meetings',
     },
@@ -66,7 +71,7 @@ const Contact: React.FC = () => {
       icon: Github,
       href: 'https://github.com',
       label: 'GitHub',
-      username: '@logeshbeeman',
+      username: '@logeshBeemaa',
       color: 'hover:bg-gray-700',
     },
     {
@@ -80,186 +85,132 @@ const Contact: React.FC = () => {
       icon: Twitter,
       href: 'https://twitter.com',
       label: 'Twitter',
-      username: '@logesh_dev',
+      username: '@logeshBeemaa',
       color: 'hover:bg-blue-500',
     },
   ];
 
+  const handleGetInTouch = () => {
+    const email = 'beemaalogesh@gmail.com';
+    const subject = 'Project Collaboration';
+    const body = "Hi Logesh,\n\nI'd like to discuss a project with you.\n\nThanks,\n[your name]";
+    const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(gmailLink, '_blank');
+  };
 
   const quickActions = [
     {
       icon: MessageCircle,
       title: 'Quick Chat',
-      description: 'Schedule a 15-minute call',
-      action: 'Schedule Call',
+      description: 'Schedule a 15‑minute call',
+      action: () => setIsBookingModalOpen(true),
+      buttonText: 'Schedule Call',
       color: 'from-green-500 to-emerald-500',
     },
     {
       icon: Calendar,
       title: 'Project Discussion',
       description: 'Book a detailed consultation',
-      action: 'Book Meeting',
+      action: () => setIsBookingModalOpen(true),
+      buttonText: 'Book Meeting',
       color: 'from-blue-500 to-cyan-500',
     },
     {
       icon: Clock,
       title: 'Urgent Request',
       description: 'Need immediate assistance?',
-      action: 'Contact Now',
+      action: handleGetInTouch,
+      buttonText: 'Contact Now',
       color: 'from-red-500 to-pink-500',
     },
   ];
 
   return (
     <section id="contact" className="py-12 sm:py-20 relative overflow-hidden section-gradient-5">
-      {/* Background Particles */}
       <div className="bg-particles">
         <div className="particle"></div>
         <div className="particle"></div>
         <div className="particle"></div>
       </div>
-
-      {/* React Code Bits */}
       <CodeBits sectionType="contact" />
 
       <div className="container mx-auto px-4 sm:px-6">
-        {/* Section Header */}
-        <div className="text-center mb-12 sm:mb-16 fade-in">
+        <div className="text-center mb-12 fade-in">
           <div className="flex items-center justify-center space-x-4 mb-6">
-            <div className="h-1 w-16 sm:w-20 bg-gradient-to-r from-violet-500 to-purple-600 rounded-full"></div>
-            <Send size={24} className="text-violet-400 sm:w-[30px] sm:h-[30px]" />
-            <div className="h-1 w-16 sm:w-20 bg-gradient-to-r from-purple-600 to-violet-500 rounded-full"></div>
+            <div className="h-1 w-16 bg-gradient-to-r from-violet-500 to-purple-600 rounded-full"></div>
+            <Send size={24} className="text-violet-400" />
+            <div className="h-1 w-16 bg-gradient-to-r from-purple-600 to-violet-500 rounded-full"></div>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text mb-4 sm:mb-6">
-            Let's Work Together
-          </h2>
-          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
+          <h2 className="text-3xl sm:text-4xl font-bold gradient-text mb-4">Let's Work Together</h2>
+          <p className="text-lg sm:text-xl text-[#f5f5f5] max-w-3xl mx-auto">
             Ready to bring your ideas to life? I'm always excited to work on new challenges 
             and collaborate with amazing people. Let's create something extraordinary together.
           </p>
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid md:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16">
-          {quickActions.map((action, index) => (
+        <div className="grid md:grid-cols-3 gap-6 mb-12 fade-in">
+          {quickActions.map((a, i) => (
             <div
-              key={index}
-              className="text-center p-4 sm:p-6 bg-gradient-to-br from-violet-500/10 to-purple-600/10 rounded-xl sm:rounded-2xl border border-violet-500/20 hover:border-violet-500/40 transition-all duration-300 hover:scale-105 scale-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              key={i}
+              className="text-center p-6 bg-gradient-to-br from-violet-500/10 to-purple-600/10 rounded-2xl border border-violet-500/20 hover:scale-105 transition-all duration-300"
             >
-              <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${action.color} rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 glow`}>
-                <action.icon size={24} className="text-white sm:w-[32px] sm:h-[32px]" />
+              <div className={`w-14 h-14 mx-auto mb-4 bg-gradient-to-br ${a.color} rounded-xl flex items-center justify-center`}>
+                <a.icon size={24} className="text-white" />
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white mb-2">{action.title}</h3>
-              <p className="text-gray-300 text-sm mb-3 sm:mb-4">{action.description}</p>
-              <button className="px-3 sm:px-4 py-2 bg-violet-500/20 border border-violet-500/30 rounded-full text-violet-300 text-sm hover:bg-violet-500/30 transition-colors duration-300">
-                {action.action}
+              <h3 className="font-bold text-white mb-2">{a.title}</h3>
+              <p className="text-[#f5f5f5] mb-4 text-sm">{a.description}</p>
+              <button
+                onClick={a.action}
+                className="px-4 py-2 bg-violet-500/20 text-violet-300 border border-violet-500/30 rounded-full hover:bg-violet-500/30 transition-colors duration-300"
+              >
+                {a.buttonText}
               </button>
             </div>
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-16">
-          {/* Contact Form */}
-          <div className="slide-in-left">
-            <div className="bg-gradient-to-br from-violet-500/10 to-purple-600/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-violet-500/20 contact-form">
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center space-x-2">
-                <Send size={20} className="text-violet-400 sm:w-[24px] sm:h-[24px]" />
-                <span>Send me a message</span>
-              </h3>
-              
-              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-                <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-black/30 border border-violet-500/30 rounded-xl text-white placeholder-gray-400 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all duration-300 text-sm sm:text-base"
-                      placeholder="Your full name"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-black/30 border border-violet-500/30 rounded-xl text-white placeholder-gray-400 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all duration-300 text-sm sm:text-base"
-                      placeholder="your@email.com"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-2">
-                    Subject *
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-black/30 border border-violet-500/30 rounded-xl text-white placeholder-gray-400 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all duration-300 text-sm sm:text-base"
-                    placeholder="What's this about?"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows={5}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-black/30 border border-violet-500/30 rounded-xl text-white placeholder-gray-400 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all duration-300 resize-none text-sm sm:text-base"
-                    placeholder="Tell me about your project, ideas, or just say hello..."
-                    required
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full flex items-center justify-center space-x-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl font-semibold hover:from-violet-600 hover:to-purple-700 transition-all duration-300 glow disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      <span>Sending...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send size={16} className="sm:w-[20px] sm:h-[20px]" />
-                      <span>Send Message</span>
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
-          </div>
-
-          {/* Contact Info */}
-          <div className="slide-in-right space-y-6 sm:space-y-8">
+        <div className="grid lg:grid-cols-2 gap-10 items-start">
+          <form onSubmit={handleSubmit} className="bg-gradient-to-br from-violet-500/10 to-purple-600/10 p-8 rounded-2xl border border-violet-500/20 space-y-6 slide-in-left shadow-lg">
+            <h3 className="text-2xl font-bold text-white flex items-center mb-4">
+              <Send size={20} className="mr-2 text-violet-400" />
+              Send me a message
+            </h3>
+            {['name','email','subject'].map((field,i) => (
+              <input
+                key={i}
+                name={field}
+                type={field==='email'?'email':'text'}
+                required
+                placeholder={field.charAt(0).toUpperCase()+field.slice(1)}
+                value={formData[field as keyof typeof formData]}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 bg-black/30 text-white rounded-xl border border-violet-500/30 focus:border-violet-500"
+              />
+            ))}
+            <textarea
+              name="message"
+              required
+              rows={5}
+              placeholder="Message"
+              value={formData.message}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 bg-black/30 text-white rounded-xl border border-violet-500/30 focus:border-violet-500 resize-none"
+            />
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-3 bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {isSubmitting ? (
+                <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin"></div>
+              ) : <Send size={18} />}
+              {isSubmitting ? 'Sending...' : 'Send Message'}
+            </button>
+          </form>
+            
+           <div className="slide-in-right flex flex-col gap-8">
             {/* Contact Information */}
-            <div className="bg-gradient-to-br from-violet-500/10 to-purple-600/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-violet-500/20">
+            <div className="bg-gradient-to-br from-violet-500/10 to-purple-600/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-violet-500/20 shadow-md">
               <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Contact Information</h3>
               
               <div className="space-y-4 sm:space-y-6">
@@ -283,7 +234,7 @@ const Contact: React.FC = () => {
             </div>
 
             {/* Social Links */}
-            <div className="bg-gradient-to-br from-violet-500/10 to-purple-600/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-violet-500/20">
+            <div className="bg-gradient-to-br from-violet-500/10 to-purple-600/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-violet-500/20 shadow-md">
               <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Connect With Me</h3>
               
               <div className="space-y-3 sm:space-y-4">
@@ -308,7 +259,7 @@ const Contact: React.FC = () => {
             </div>
 
             {/* Availability */}
-            <div className="bg-gradient-to-br from-violet-500/10 to-purple-600/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-violet-500/20">
+            <div className="bg-gradient-to-br from-violet-500/10 to-purple-600/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-violet-500/20 shadow-md">
               <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Availability</h3>
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex items-center space-x-3">
@@ -327,15 +278,18 @@ const Contact: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Footer */}
-      <footer className="mt-12 sm:mt-20 pt-6 sm:pt-8 border-t border-violet-500/20 text-center fade-in">
-        {/* <div className="container mx-auto px-4 sm:px-6"> */}
+      <BookingModal isOpen={isBookingModalOpen} onClose={() => setIsBookingModalOpen(false)} />
+        </div>
+         <footer className="mt-12 sm:mt-20 pt-6 sm:pt-8 border-t border-violet-500/20 text-center fade-in">
+        <div className="container mx-auto px-4 sm:px-6">
           <p className="text-gray-400 mb-3 sm:mb-4 text-sm sm:text-base">
             © 2024 Logesh. All rights reserved.
           </p>
-        {/* </div> */}
+          {/* <p className="text-gray-500 text-xs sm:text-sm">
+            Built with React, TypeScript & Tailwind CSS • Designed with ❤️ in San Francisco
+          </p> */}
+        </div>
       </footer>
     </section>
   );

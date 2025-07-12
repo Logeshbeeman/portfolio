@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, Target, Award, Coffee, Code, Palette, Zap, Heart, Star, Rocket } from 'lucide-react';
 import CodeBits from './CodeBits';
+import kaliImg from '../assets/kali-primary.png'; // Adjust the path as necessary
 
 const About: React.FC = () => {
   const stats = [
@@ -32,7 +33,7 @@ const About: React.FC = () => {
   ];
 
   return (
-    <section id="about" className="py-12 sm:py-20 relative overflow-hidden section-gradient-2">
+    <section id="about" className="py-12 sm:py-20 relative section-gradient-2">
       {/* Background Particles */}
       <div className="bg-particles">
         <div className="particle"></div>
@@ -105,8 +106,8 @@ const About: React.FC = () => {
             <div className="relative">
               <div className="w-80 h-80 sm:w-96 sm:h-96 mx-auto gradient-border glow hover-lift">
                 <div className="w-full h-full bg-gradient-to-br from-green-600/20 to-emerald-700/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                  <div className="w-64 h-64 sm:w-80 sm:h-80 animated-gradient rounded-2xl flex items-center justify-center">
-                    <User size={80} className="text-white sm:w-[120px] sm:h-[120px]" />
+                  <div className="w-64 h-64 sm:w-80 sm:h-80 animated-gradient rounded-2xl flex items-center justify-center overflow-hidden">
+                    <img src={kaliImg} alt='user' />
                   </div>
                 </div>
               </div>

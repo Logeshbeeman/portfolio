@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, Github, Eye, Star, Zap, Layers, Globe } from 'lucide-react';
+import { ExternalLink, Github, Star, Zap, Layers, Globe } from 'lucide-react';
 import CodeBits from './CodeBits';
 
 const Projects: React.FC = () => {
@@ -78,22 +78,19 @@ const Projects: React.FC = () => {
     },
   ];
 
-  const featuredProjects = projects.filter(project => project.featured);
-  const otherProjects = projects.filter(project => !project.featured);
+  const featuredProjects = projects.filter(p => p.featured);
+  const otherProjects = projects.filter(p => !p.featured);
 
   return (
-    <section id="projects" className="py-12 sm:py-20 relative overflow-hidden section-gradient-3">
-      {/* Background Particles */}
+    <section id="projects" className="py-12 sm:py-20 relative section-gradient-3">
       <div className="bg-particles">
         <div className="particle"></div>
         <div className="particle"></div>
         <div className="particle"></div>
       </div>
 
-      {/* React Code Bits */}
       <CodeBits sectionType="projects" />
 
-      {/* Floating Elements */}
       <div className="absolute top-20 left-20 opacity-10 hidden lg:block">
         <Layers size={70} className="text-red-400 floating" />
       </div>
@@ -128,70 +125,43 @@ const Projects: React.FC = () => {
             {featuredProjects.map((project, index) => (
               <div
                 key={index}
-                className="group relative gradient-border hover-lift scale-in project-card"
-                style={{ animationDelay: `${index * 0.2}s` }}
+                className="group relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-lg hover-lift transition-all duration-300 border border-white/20 hover:border-white"
               >
-                <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl">
+                <div className="relative w-full h-56 sm:h-72">
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-56 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 transform group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                  
-                  {/* Project Actions */}
-                  <div className="absolute top-4 sm:top-6 right-4 sm:right-6 flex space-x-2 sm:space-x-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <a
-                      href={project.githubUrl}
-                      className="w-10 h-10 sm:w-12 sm:h-12 glass-effect rounded-full flex items-center justify-center hover:bg-red-500 transition-colors duration-300 glow"
-                    >
-                      <Github size={16} className="text-white sm:w-[20px] sm:h-[20px]" />
+                  <div className="absolute top-4 left-4 flex items-center space-x-2 glass-effect rounded-full px-3 py-1">
+                    <Star size={14} className="text-yellow-400 fill-current" />
+                    <span className="text-white font-semibold text-sm">{project.stars}</span>
+                  </div>
+                  <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <a href={project.githubUrl} className="w-10 h-10 glass-effect rounded-full flex items-center justify-center hover:bg-red-500 transition-colors duration-300">
+                      <Github size={18} className="text-white" />
                     </a>
-                    <a
-                      href={project.liveUrl}
-                      className="w-10 h-10 sm:w-12 sm:h-12 glass-effect rounded-full flex items-center justify-center hover:bg-red-500 transition-colors duration-300 glow"
-                    >
-                      <ExternalLink size={16} className="text-white sm:w-[20px] sm:h-[20px]" />
+                    <a href={project.liveUrl} className="w-10 h-10 glass-effect rounded-full flex items-center justify-center hover:bg-red-500 transition-colors duration-300">
+                      <ExternalLink size={18} className="text-white" />
                     </a>
                   </div>
-
-                  {/* Stars */}
-                  <div className="absolute top-4 sm:top-6 left-4 sm:left-6 flex items-center space-x-2 glass-effect rounded-full px-3 sm:px-4 py-1 sm:py-2">
-                    <Star size={12} className="text-yellow-400 fill-current sm:w-[16px] sm:h-[16px]" />
-                    <span className="text-white font-semibold text-sm sm:text-base">{project.stars}</span>
-                  </div>
-
-                  {/* Category Badge */}
-                  <div className="absolute bottom-4 sm:bottom-6 right-4 sm:right-6">
-                    <span className={`px-3 sm:px-4 py-1 sm:py-2 bg-gradient-to-r ${project.gradient} rounded-full text-white font-semibold text-xs sm:text-sm`}>
+                  <div className="absolute bottom-4 right-4">
+                    <span className={`px-3 py-1 bg-gradient-to-r ${project.gradient} rounded-full text-white text-sm font-semibold`}>
                       {project.category}
                     </span>
                   </div>
                 </div>
-
-                <div className="p-4 sm:p-8 glass-effect">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4 gradient-text">{project.title}</h3>
-                  
-                  <p className="text-gray-300 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-lg">
-                    {project.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6">
-                    {project.technologies.map((tech, techIndex) => (
-                      <span
-                        key={techIndex}
-                        className="px-3 sm:px-4 py-1 sm:py-2 glass-effect border border-red-500/30 rounded-full text-red-300 text-xs sm:text-sm hover:border-red-500 hover:bg-red-500/20 transition-all duration-300"
-                      >
+                <div className="p-4 sm:p-6 bg-black/40 backdrop-blur-md">
+                  <h3 className="text-xl font-bold text-white mb-2 gradient-text">{project.title}</h3>
+                  <p className="text-sm text-gray-300 mb-4">{project.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.technologies.map((tech, i) => (
+                      <span key={i} className="px-3 py-1 text-xs text-red-300 border border-red-500/30 rounded-full">
                         {tech}
                       </span>
                     ))}
                   </div>
-
-                  <button className="flex items-center space-x-2 text-red-400 hover:text-red-300 transition-colors duration-300 font-semibold group text-sm sm:text-base">
-                    <Eye size={16} className="sm:w-[18px] sm:h-[18px]" />
-                    <span>View Project Details</span>
-                    <div className="w-0 group-hover:w-4 h-0.5 bg-red-400 transition-all duration-300"></div>
-                  </button>
                 </div>
               </div>
             ))}
@@ -208,61 +178,44 @@ const Projects: React.FC = () => {
             {otherProjects.map((project, index) => (
               <div
                 key={index}
-                className="group relative gradient-border hover-lift scale-in project-card"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="group relative overflow-hidden rounded-xl shadow-md hover-lift transition-all duration-300 border border-white/20 hover:border-white"
               >
-                <div className="relative overflow-hidden rounded-xl sm:rounded-2xl">
+                <div className="relative w-full h-48 sm:h-56">
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-48 sm:h-56 object-cover transition-transform duration-300 group-hover:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 transform group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
-                  <div className="absolute top-3 sm:top-4 right-3 sm:right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <a
-                      href={project.githubUrl}
-                      className="w-8 h-8 sm:w-10 sm:h-10 glass-effect rounded-full flex items-center justify-center hover:bg-red-500 transition-colors duration-300"
-                    >
-                      <Github size={14} className="text-white sm:w-[16px] sm:h-[16px]" />
-                    </a>
-                    <a
-                      href={project.liveUrl}
-                      className="w-8 h-8 sm:w-10 sm:h-10 glass-effect rounded-full flex items-center justify-center hover:bg-red-500 transition-colors duration-300"
-                    >
-                      <ExternalLink size={14} className="text-white sm:w-[16px] sm:h-[16px]" />
-                    </a>
+                  <div className="absolute top-3 left-3 flex items-center space-x-1 glass-effect rounded-full px-2 py-1">
+                    <Star size={12} className="text-yellow-400 fill-current" />
+                    <span className="text-white text-xs">{project.stars}</span>
                   </div>
-
-                  <div className="absolute top-3 sm:top-4 left-3 sm:left-4 flex items-center space-x-1 glass-effect rounded-full px-2 sm:px-3 py-1">
-                    <Star size={12} className="text-yellow-400 fill-current sm:w-[14px] sm:h-[14px]" />
-                    <span className="text-white text-xs sm:text-sm font-semibold">{project.stars}</span>
+                  <div className="absolute top-3 right-3 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <a href={project.githubUrl} className="w-8 h-8 glass-effect rounded-full flex items-center justify-center hover:bg-red-500">
+                      <Github size={14} className="text-white" />
+                    </a>
+                    <a href={project.liveUrl} className="w-8 h-8 glass-effect rounded-full flex items-center justify-center hover:bg-red-500">
+                      <ExternalLink size={14} className="text-white" />
+                    </a>
                   </div>
                 </div>
-
-                <div className="p-4 sm:p-6 glass-effect">
-                  <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <h4 className="text-lg sm:text-xl font-bold text-white gradient-text">{project.title}</h4>
-                    <span className={`px-2 sm:px-3 py-1 bg-gradient-to-r ${project.gradient} rounded-full text-white text-xs font-semibold`}>
+                <div className="p-4 bg-black/40 backdrop-blur-md">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-white font-semibold text-lg gradient-text">{project.title}</h4>
+                    <span className={`px-2 py-1 bg-gradient-to-r ${project.gradient} rounded-full text-white text-xs`}>
                       {project.category}
                     </span>
                   </div>
-                  
-                  <p className="text-gray-300 text-sm leading-relaxed mb-3 sm:mb-4">
-                    {project.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-1 sm:gap-2 mb-3 sm:mb-4">
-                    {project.technologies.slice(0, 3).map((tech, techIndex) => (
-                      <span
-                        key={techIndex}
-                        className="px-2 sm:px-3 py-1 glass-effect border border-red-500/30 rounded text-red-300 text-xs"
-                      >
+                  <p className="text-sm text-gray-300 mb-2">{project.description}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {project.technologies.slice(0, 3).map((tech, i) => (
+                      <span key={i} className="px-2 py-1 text-xs border border-red-500/30 text-red-300 rounded">
                         {tech}
                       </span>
                     ))}
                     {project.technologies.length > 3 && (
-                      <span className="px-2 sm:px-3 py-1 glass-effect border border-red-500/30 rounded text-red-300 text-xs">
+                      <span className="px-2 py-1 text-xs border border-red-500/30 text-red-300 rounded">
                         +{project.technologies.length - 3}
                       </span>
                     )}
@@ -273,16 +226,16 @@ const Projects: React.FC = () => {
           </div>
         </div>
 
-        {/* Call to Action */}
+        {/* CTA */}
         <div className="text-center mt-12 sm:mt-20 fade-in">
-          <button className="px-8 sm:px-12 py-3 sm:py-4 animated-gradient rounded-full font-semibold transition-all duration-300 glow hover-lift text-base sm:text-lg">
+          <button
+            className="px-8 sm:px-12 py-3 sm:py-4 animated-gradient rounded-full font-semibold transition-all duration-300 glow hover-lift text-base sm:text-lg"
+            onClick={() => window.open('https://github.com/Logeshbeeman')}
+          >
             View All Projects on GitHub
           </button>
         </div>
       </div>
-
-      {/* Section Divider */}
-      {/* <div className="absolute bottom-0 left-0 right-0 section-divider"></div> */}
     </section>
   );
 };

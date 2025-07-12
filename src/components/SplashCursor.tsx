@@ -1140,7 +1140,9 @@ function SplashCursor({
     });
 
     window.addEventListener('touchmove', (e) => {
-      e.preventDefault();
+      // Only preventDefault if not scrolling (e.g., stylus or multi-touch), otherwise allow scroll
+      // If only one touch and it's vertical, allow scroll
+      // If you want to always allow scroll, just remove preventDefault entirely:
       const touches = e.targetTouches;
       let pointer = pointers[0];
       for (let i = 0; i < touches.length; i++) {
@@ -1148,7 +1150,7 @@ function SplashCursor({
         let posY = scaleByPixelRatio(touches[i].clientY);
         updatePointerMoveData(pointer, posX, posY, generateColor());
       }
-    }, { passive: false });
+    }, { passive: true });
 
     window.addEventListener('touchstart', (e) => {
       const touches = e.targetTouches;
@@ -1180,6 +1182,7 @@ function SplashCursor({
 
   return (
     <div
+      className="splash-cursor"
       style={{
         position: 'fixed',
         top: 0,
@@ -1197,6 +1200,8 @@ function SplashCursor({
           width: '100vw',
           height: '100vh',
           display: 'block',
+          pointerEvents: 'none',
+          touchAction: 'auto',
         }}
       />
     </div>
